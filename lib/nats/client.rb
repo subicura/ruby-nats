@@ -750,7 +750,7 @@ module NATS
     @pending << command unless priority
     @pending.unshift(command) if priority
     @pending_size += command.bytesize
-    EM.next_tick { flush_pending }
+    EM.next_tick { flush_pending } if connected?
     if (@options[:fast_producer_error] && pending_data_size > FAST_PRODUCER_THRESHOLD)
       err_cb.call(NATS::ClientError.new("Fast Producer: #{pending_data_size} bytes outstanding"))
     end
